@@ -1,3 +1,5 @@
+# https://github.com/jmparra/nginx-proxy
+
 FROM nginx:1.14.1
 LABEL maintainer="Jason Wilder mail@jasonwilder.com"
 
@@ -12,7 +14,9 @@ RUN apt-get update \
 
 # Configure Nginx and apply fix for very long server names
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf \
- && sed -i 's/worker_processes  1/worker_processes  auto/' /etc/nginx/nginx.conf
+ && echo "include /etc/nginx/conf.d/tcp/*.conf;" >> /etc/nginx/nginx.conf \
+ && sed -i 's/worker_processes  1/worker_processes  auto/' /etc/nginx/nginx.conf \
+ && mkdir -p /etc/nginx/conf.d/tcp/
 
 # Install Forego
 ADD https://github.com/jwilder/forego/releases/download/v0.16.1/forego /usr/local/bin/forego
